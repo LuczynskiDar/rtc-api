@@ -7,6 +7,47 @@ COMPOSE_PROD = $(COMPOSE_BASE) -f docker-compose.prod.yml
 APP          = app
 
 # ============================================================
+# Help (default)
+# ============================================================
+help:
+	@echo ""
+	@echo "Usage: make [command]"
+	@echo ""
+	@echo "Dev:"
+	@echo "  dev              Start with logs"
+	@echo "  dev-d            Start in background"
+	@echo "  down             Stop"
+	@echo "  down-v           Stop + remove volumes"
+	@echo "  logs             App logs"
+	@echo "  shell            Enter container"
+	@echo ""
+	@echo "Tests:"
+	@echo "  test             Run all tests"
+	@echo "  test-unit        Unit tests only"
+	@echo "  test-integration Integration tests only"
+	@echo "  test-e2e         E2E tests only"
+	@echo "  test-cov         Tests with coverage"
+	@echo ""
+	@echo "Database:"
+	@echo "  migrate          Upgrade head"
+	@echo "  migrate-down     Downgrade by one"
+	@echo "  migrate-new      Create new migration (name=)"
+	@echo "  migrate-history  Show history"
+	@echo "  db-shell         psql in container"
+	@echo ""
+	@echo "Production:"
+	@echo "  prod             Start production"
+	@echo "  prod-down        Stop production"
+	@echo "  prod-logs        Production logs"
+	@echo ""
+	@echo "Utilities:"
+	@echo "  ps               Container status"
+	@echo "  build            Build images"
+	@echo "  rebuild          Build without cache"
+	@echo "  prune            Clean Docker resources"
+	@echo ""
+
+# ============================================================
 # Dev
 # ============================================================
 dev:
@@ -110,4 +151,4 @@ prune:
         lint format lint-fix \
         migrate migrate-down migrate-new migrate-history db-shell \
         prod prod-down prod-logs \
-        ps build rebuild prune
+        ps build rebuild prune help

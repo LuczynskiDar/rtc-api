@@ -1,5 +1,5 @@
 # === base ===
-FROM python:3.13-alpine AS base
+FROM python:3.13-slim AS base
 
 RUN apt-get update && apt-get upgrade -y \
     && apt-get install -y \
@@ -18,10 +18,10 @@ COPY pyproject.toml .
 # === dev ===
 FROM base AS dev
 
-# instaluje prod + dev (pytest, debugpy, ruff, playwright)
+# installs prod + dev (pytest, debugpy, ruff, playwright)
 RUN uv sync
 
-# zależności systemowe dla playwright
+# dependencies for playwright
 RUN apt-get update && apt-get install -y \
         libnss3 \
         libatk1.0-0 \
@@ -37,12 +37,13 @@ RUN apt-get update && apt-get install -y \
         libasound2 \
     && rm -rf /var/lib/apt/lists/*
 
-# instaluje przeglądarki playwright
+# installs playwright
 RUN uv run playwright install chromium
 
 COPY . .
 
 # === prod ===
 FROM base AS prod
-RUN uv sync --no-dev          
+
+RUN uv sync --no-dev
 COPY . .
