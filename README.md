@@ -118,11 +118,11 @@ playwright install chromium
 1. Produkction
 
     ```bash
-    uv export --no-dev -o requirements.txt
+    uv export --no-dev --no-hashes  -o requirements.txt
     ```
 
 2. Development
 
     ```bash
-    uv export -o requirements-dev.txt
+    uv export --no-hashes  -o requirements-dev.txt
     ```

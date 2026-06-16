@@ -12,6 +12,16 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  srs:
+    image: ossrs/srs:5
+    container_name: srs
+    ports:
+      - "1935:1935"    # RTMP
+      - "8080:8080"    # HTTP/HLS
+    volumes:
+      - ./srs.conf:/usr/local/srs/conf/srs.conf
+      - srs_data:/usr/local/srs/objs
+
   app:
     build: .
     env_file:
@@ -21,3 +31,4 @@ services:
 
 volumes:
   postgres_data:
+  srs_data:

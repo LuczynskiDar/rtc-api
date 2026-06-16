@@ -1,4 +1,4 @@
-# .dockerignore
+.dockerignore
 .venv
 venv
 __pycache__
@@ -7,3 +7,7 @@ __pycache__
 .env
 .git
 .gitignore
+docker-compose.dev.yml
+docker-compose.prod.yml
+docker-compose.yml
+Dockerfile
