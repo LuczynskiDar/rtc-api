@@ -20,6 +20,14 @@ class Settings(BaseSettings):
     )
     
     @property
+    def database_url(self) -> str:
+        return (
+            f"postgresql+asyncpg://{self.postgres_user}:"
+            f"{self.postgres_password}@{self.postgres_host}:"
+            f"{self.postgres_port}/{self.postgres_db}"
+        )
+
+    @property
     def is_dev(self) -> bool:
         return self.environment == "development"
 

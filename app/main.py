@@ -1,19 +1,16 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-# from config import settings
+
+from app.db.init_db import check_db_connection
 from .config import settings
 
-# from app.routers import users  # przykładowy router
-# from app.database import init_db
+from app.api.v1.routers import user_streams
 
-
-# startup i shutdown aplikacji
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # startup – odpala się przy starcie
-    # await init_db()
+    if not await check_db_connection():
+        raise RuntimeError("Cannot connect to database")
     yield
-    # shutdown – odpala się przy zamknięciu
 
 
 app = FastAPI(
@@ -26,10 +23,8 @@ app = FastAPI(
     debug=settings.debug,
 )
 
-# app.include_router(users.router, prefix="/users", tags=["users"])
+app.include_router(user_streams.router, prefix="/users", tags=["users"])
 
-
-# healthcheck – przydatny dla Dockera i monitoringu
 @app.get("/health")
 async def health():
     response = {"status": "ok"}
@@ -37,3 +32,4 @@ async def health():
         response["environment"] = settings.environment
         response["debug"] = settings.debug
     return response
+
