@@ -1,4 +1,3 @@
-.dockerignore
 .venv
 venv
 __pycache__
@@ -7,7 +6,31 @@ __pycache__
 .env
 .git
 .gitignore
+
+# Docker files
+.dockerignore
 docker-compose.dev.yml
 docker-compose.prod.yml
 docker-compose.yml
 Dockerfile
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+test-results/
+playwright-report/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Content data
+content/
+
+# Client
+client/
