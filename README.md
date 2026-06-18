@@ -61,8 +61,6 @@ rtc-api/
 
 ## Requirements
 
-## Requirements
-
 - Docker Desktop
 - Make
 - uv
