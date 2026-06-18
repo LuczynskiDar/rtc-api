@@ -141,7 +141,7 @@ Start the project:
     ```bash
     
     uv add fastapi uvicorn[standard] sqlalchemy alembic asyncpg pydantic-settings python-jose[cryptography] passlib[bcrypt]
-    ````
+    ```
 
 2. Developer
 
