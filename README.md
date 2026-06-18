@@ -59,6 +59,24 @@ rtc-api/
 | Containerization | Docker Compose (dev/prod) |
 | Dev environment | Dev Container (VS Code) — Python, Debugpy, Ruff |
 
+## Database
+
+The database contains 3 core tables required by the API and 9 extended tables planned for future features.
+
+### Core tables
+
+| Table | Purpose |
+|-------|---------|
+| `users` | User accounts — login, password, active/admin flags |
+| `streams` | Available streams — name (RTMP/HLS key) and source file path |
+| `stream_access` | Controls which users can access which streams (many-to-many) |
+
+### Extended tables (not yet used by the API)
+
+`roles`, `user_roles`, `categories`, `stream_categories`, `messages`, `reactions`, `days`, `schedule`, `watch_history`
+
+Full schema: [`app/schemas/sql/DATABASE.md`](app/schemas/sql/DATABASE.md)
+
 ## Requirements
 
 - Docker Desktop
@@ -138,6 +156,7 @@ Start the project:
 ### Install
 
 1. Production
+
     ```bash
     
     uv add fastapi uvicorn[standard] sqlalchemy alembic asyncpg pydantic-settings python-jose[cryptography] passlib[bcrypt]
@@ -183,3 +202,15 @@ playwright install chromium
     ```bash
     uv export --no-hashes  -o requirements-dev.txt
     ```
+
+## Content
+
+The `content/` directory must contain video files (`film1.mp4`, `film2.mp4`, `film3.mp4`) mounted into the container. These files are not included in the repository.
+
+You can download any publicly available video using [yt-dlp](https://github.com/yt-dlp/yt-dlp):
+
+```bash
+yt-dlp -f "bv*[ext=mp4]+ba[ext=m4a]" --merge-output-format mp4 -o "content/film1.mp4" https://www.example.com/watch?v=your_video_id
+```
+
+Repeat for `film2.mp4` and `film3.mp4`.
