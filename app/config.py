@@ -27,7 +27,10 @@ class Settings(BaseSettings):
             f"{self.postgres_password}@{self.postgres_host}:"
             f"{self.postgres_port}/{self.postgres_db}"
         )
-        
+     
+    srs_http_host: str = "localhost"
+    srs_http_port: int = 8080
+       
     @property
     def hls_base_url(self) -> str:
         return f"http://{self.srs_http_host}:{self.srs_http_port}"

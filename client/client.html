@@ -22,15 +22,17 @@
 
     <div id="streams-section" style="display:none;">
         <h3>Select stream</h3>
-        <select id="streamSelect"></select>
-        <button onclick="playSelectedStream()">Play</button>
-        <video id="video" controls></video>
+        <select id="streamSelect" onchange="startAndPlay()"></select>
+        <button onclick="stopStream()">Stop</button>
+        <video id="video" controls onplay="handlePlay()"></video>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         const API_URL = 'http://localhost:8000';
+        const HLS_URL = 'http://localhost:8080';
         let streams = [];
+        let currentHls = null;
 
         function showStatus(message, isError = false) {
             const status = document.getElementById('status');
@@ -65,9 +67,11 @@
             if (streams.length === 0) {
                 select.innerHTML = '<option>No streams found</option>';
             } else {
+                select.innerHTML = '<option value="" disabled selected>Choose a stream</option>';
                 streams.forEach(s => {
                     const option = document.createElement('option');
                     option.value = s.id;
+                    option.dataset.name = s.name;
                     option.textContent = s.name;
                     select.appendChild(option);
                 });
@@ -76,17 +80,78 @@
             document.getElementById('streams-section').style.display = 'block';
         }
 
-        function playSelectedStream() {
-            const streamId = document.getElementById('streamSelect').value;
+        async function startAndPlay() {
+            const select = document.getElementById('streamSelect');
+            const streamId = select.value;
+            if (!streamId) return;
+
+            const streamName = select.options[select.selectedIndex].dataset.name;
+
+            showStatus(`Starting stream ${streamName}...`);
+
+            const response = await fetch(`${API_URL}/v1/streams/${streamId}/start`, {
+                method: 'POST'
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                if (error.detail !== 'Stream already running') {
+                    showStatus(`Error: ${error.detail}`, true);
+                    return;
+                }
+            }
+
+            showStatus(`Stream ${streamName} is live`);
+            playStream(streamName);
+        }
+
+        function playStream(streamName) {
             const video = document.getElementById('video');
-            const streamUrl = `http://localhost:8080/live/${streamId}.m3u8`;
+            const streamUrl = `${HLS_URL}/live/${streamName}.m3u8`;
+
+            if (currentHls) {
+                currentHls.destroy();
+            }
 
             if (Hls.isSupported()) {
-                const hls = new Hls();
-                hls.loadSource(streamUrl);
-                hls.attachMedia(video);
+                currentHls = new Hls();
+                currentHls.loadSource(streamUrl);
+                currentHls.attachMedia(video);
+                video.play();
             } else {
                 video.src = streamUrl;
+                video.play();
+            }
+        }
+
+        function handlePlay() {
+            const select = document.getElementById('streamSelect');
+            if (select.value && !currentHls) {
+                startAndPlay();
+            }
+        }
+
+        async function stopStream() {
+            const select = document.getElementById('streamSelect');
+            const streamId = select.value;
+            if (!streamId) return;
+
+            const streamName = select.options[select.selectedIndex].dataset.name;
+
+            const response = await fetch(`${API_URL}/v1/streams/${streamId}/stop`, {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                showStatus(`Stream ${streamName} stopped`);
+                document.getElementById('video').pause();
+                if (currentHls) {
+                    currentHls.destroy();
+                    currentHls = null;
+                }
+            } else {
+                const error = await response.json();
+                showStatus(`Error: ${error.detail}`, true);
             }
         }
     </script>

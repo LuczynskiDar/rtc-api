@@ -26,13 +26,15 @@ async def start_stream(stream_id: int, db: AsyncSession = Depends(get_db)):
     cmd = [
         "ffmpeg",
         "-re",                                  # real speed
+        "-stream_loop", "-1", 
         "-i", stream["file_path"],               # db file
-        "-c:v", "copy",
-        "-c:a", "copy",
+        "-c:v", "libx264",
+        "-preset", "veryfast",
+        "-c:a", "aac",          # audio AAC, but better to recode
         "-f", "flv",
         f"rtmp://srs:1935/live/{stream['name']}"  # ← service name "srs", not localhost!
     ]
-
+    
     process = await asyncio.create_subprocess_exec(
         *cmd,
         stdout=asyncio.subprocess.PIPE,
