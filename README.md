@@ -172,7 +172,7 @@ playwright install chromium
 
 ### Export to requirements
 
-1. Produkction
+1. Production
 
     ```bash
     uv export --no-dev --no-hashes  -o requirements.txt
