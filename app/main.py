@@ -1,10 +1,11 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from app.db.init_db import check_db_connection
 from .config import settings
 
-from app.api.v1.routers import user_streams
+from app.api.v1.routers import streams, user_streams
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -23,7 +24,15 @@ app = FastAPI(
     debug=settings.debug,
 )
 
-app.include_router(user_streams.router, prefix="/users", tags=["users"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"] if settings.is_dev else [],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(user_streams.router, prefix="/v1/users", tags=["users"])
+app.include_router(streams.router, prefix="/v1/streams", tags=["streams"])
 
 @app.get("/health")
 async def health():

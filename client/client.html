@@ -46,7 +46,7 @@
                 return;
             }
 
-            const response = await fetch(`${API_URL}/users/${username}/streams`);
+            const response = await fetch(`${API_URL}/v1/users/${username}/streams`);
 
             if (!response.ok) {
                 const error = await response.json();
@@ -68,7 +68,7 @@
                 streams.forEach(s => {
                     const option = document.createElement('option');
                     option.value = s.id;
-                    option.textContent = `${s.title} (${s.status})`;
+                    option.textContent = s.name;
                     select.appendChild(option);
                 });
             }

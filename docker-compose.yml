@@ -16,8 +16,9 @@ services:
     image: ossrs/srs:5
     container_name: srs
     ports:
-      - "1935:1935"    # RTMP
-      - "8080:8080"    # HTTP/HLS
+      - "1935:1935"    # RTMP – for FFmpeg
+      - "8080:8080"    # HTTP/HLS – for client
+      - "1985:1985"    # HTTP API – for status/stats
     volumes:
       - ./srs.conf:/usr/local/srs/conf/srs.conf
       - srs_data:/usr/local/srs/objs

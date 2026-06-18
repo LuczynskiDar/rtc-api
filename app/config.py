@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     postgres_password: str
     postgres_db: str
     postgres_port: int = 5432
+    postgres_host: str = "postgres"
 
     environment: Literal["development", "staging", "production"] = "production"
     debug: bool = False
@@ -26,7 +27,11 @@ class Settings(BaseSettings):
             f"{self.postgres_password}@{self.postgres_host}:"
             f"{self.postgres_port}/{self.postgres_db}"
         )
-
+        
+    @property
+    def hls_base_url(self) -> str:
+        return f"http://{self.srs_http_host}:{self.srs_http_port}"
+    
     @property
     def is_dev(self) -> bool:
         return self.environment == "development"
