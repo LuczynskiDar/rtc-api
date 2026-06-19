@@ -1,0 +1,22 @@
+Dobra, oto zestaw zadań — najpierw INSERT-y, potem zapytania SELECT. Rozwiązuj je sam, daj znać co Ci wyjdzie, sprawdzę i pomogę jeśli się zaczepisz.
+Zadania na INSERT
+1. Dodaj nowego użytkownika o nazwie michal.dabrowski, mailu michal.dabrowski@firma.pl, z dowolnym hashem hasła, aktywnego, nie-superusera.
+2. Dodaj nowy stream o nazwie film4 ze ścieżką /video/film4.mp4, a następnie przypisz mu dwie kategorie z istniejącej tabeli categories 
+(musisz wstawić wiersze do dwóch tabel — najpierw do streams, potem do stream_categories, korzystając z id nowo dodanego streamu).
+3. Daj userowi o id=5 dostęp do streamu id=2 poprzez stream_access — ale zrób to tak, żeby zapytanie nie wywaliło błędu, 
+jeśli ten dostęp już istnieje (podpowiedź: poszukaj klauzuli ON CONFLICT).
+4. Wstaw 3 nowe wiersze do watch_history dla jednego konkretnego użytkownika, każdy dla innego streamu, z różnymi view_ratio (np. 20, 60, 95).
+5. Dodaj nową kategorię horror do categories, a następnie w jednym kroku (jednym zapytaniem INSERT ... SELECT, bez podawania id na sztywno) 
+przypisz tę nową kategorię do streamu film1 — podpowiedź: będziesz musiał użyć podzapytania, żeby znaleźć id kategorii horror i id streamu film1 po nazwie, a nie po numerze.
+
+Zadania na SELECT
+1. Wyświetl wszystkich użytkowników, którzy nie są aktywni (is_active = FALSE), pokazując tylko username i email.
+2. Wyświetl nazwę streamu i liczbę kategorii przypisanych do każdego streamu (podpowiedź: JOIN + GROUP BY + COUNT).
+3. Znajdź wszystkich userów, którzy mają dostęp do streamu film1, ale pokaż tylko ich username i email 
+— wynik powinien wymagać złączenia trzech tabel (users, stream_access, streams).
+4. Wyświetl średnią ocenę (reaction) dla każdego streamu z tabeli reactions, posortowaną od najwyższej do najniższej 
+(podpowiedź: AVG(), GROUP BY, ORDER BY).
+5. Znajdź userów, którzy mają rolę moderator, ale nie mają roli admin — pokaż ich username 
+(podpowiedź: to wymaga albo dwóch podzapytań z IN/NOT IN, albo JOIN na user_roles z odpowiednim filtrowaniem; zastanów się też nad EXCEPT).
+
+Zacznij od czego chcesz — INSERT-y czy SELECT-y, w dowolnej kolejności. Jeśli zablokujesz się na konkretnym zadaniu, powiedz które i co już próbowałeś, dam Ci podpowiedź, nie rozwiązanie.
